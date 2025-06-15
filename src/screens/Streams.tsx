@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, TouchableOpacity, Text, Alert } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../AppNavigator';
-import { getEpisodeStreams } from '../api/streams';
+import { getEpisodeStreams, Stream } from '../api/streams';
 import * as Clipboard from 'expo-clipboard';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Streams'>;
@@ -18,10 +18,15 @@ function toMagnet(s: any) {
 
 export default function StreamsScreen({ route }: Props) {
   const { imdbId, season, episode, title } = route.params;
-  const [streams, setStreams] = useState<{ url: string; name: string }[]>([]);
+  const [streams, setStreams] = useState<Stream[]>([]);
 
   useEffect(() => {
-    getEpisodeStreams(imdbId, season, episode).then(setStreams);
+    getEpisodeStreams(imdbId, season, episode).then(all => {
+      const filtered = all.filter(s =>
+        s.language === 'es' || s.language === 'en' || s.language === 'multi'
+      );
+      setStreams(filtered);
+    });
   }, []);
 
   async function copy(stream: any) {
@@ -43,6 +48,7 @@ export default function StreamsScreen({ route }: Props) {
         >
             <Text style={{ color: '#fff' }}>
             {item.name ?? item.url ?? item.infoHash}
+            {item.language && ` [${item.language.toUpperCase()}]`}
             </Text>
         </TouchableOpacity>
         )}
