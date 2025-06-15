@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { FlatList, TouchableOpacity, Text, Image } from 'react-native';
 import SearchBar from '../components/SearchBar';
-import { searchSeries } from '../api/cinemeta';
+import { searchSeriesTMDB } from '../api/tmdb';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../AppNavigator';
 
@@ -16,7 +16,7 @@ export default function HomeScreen({ navigation }: Props) {
         if (t.trim().length < 2) return setResults([]);
 
 
-        const results = await searchSeries(t);
+        const results = await searchSeriesTMDB(t);
         setResults(results);
 
         // const apiResults = await searchSeries(t);
@@ -40,6 +40,7 @@ export default function HomeScreen({ navigation }: Props) {
                         onPress={() =>
                             navigation.navigate('Seasons', {
                                 imdbId: item.id,
+                                tmdbId: item.tmdbId,
                                 title: item.name,
                             })
                         }

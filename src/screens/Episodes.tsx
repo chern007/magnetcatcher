@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, TouchableOpacity, Text } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../AppNavigator';
-import { getSeriesMeta, extractEpisodes } from '../api/cinemeta';
+import { fetchEpisodes } from '../api/tmdb';
 
 // Screen that shows the list of episodes for a given season
 // and navigates to Streams with the correct episode number.
@@ -10,11 +10,11 @@ import { getSeriesMeta, extractEpisodes } from '../api/cinemeta';
 export type EpisodesScreenProps = NativeStackScreenProps<RootStackParamList, 'Episodes'>;
 
 export default function EpisodesScreen({ route, navigation }: EpisodesScreenProps) {
-  const { imdbId, season, title } = route.params;
+  const { imdbId, tmdbId, season, title } = route.params;
   const [episodes, setEpisodes] = useState<{ episode: number; title: string }[]>([]);
 
   useEffect(() => {
-    getSeriesMeta(imdbId).then(meta => setEpisodes(extractEpisodes(meta, season)));
+    fetchEpisodes(tmdbId, season).then(setEpisodes);
   }, []);
 
   return (

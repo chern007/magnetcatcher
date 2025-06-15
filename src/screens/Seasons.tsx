@@ -2,15 +2,15 @@ import React, { useEffect, useState } from 'react';
 import { FlatList, TouchableOpacity, Text } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../AppNavigator';
-import { getSeriesMeta, extractSeasons } from '../api/cinemeta';
+import { fetchShow, extractSeasons } from '../api/tmdb';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Seasons'>;
 export default function SeasonsScreen({ route, navigation }: Props) {
-  const { imdbId, title } = route.params;
+  const { imdbId, tmdbId, title } = route.params;
   const [seasons, setSeasons] = useState<number[]>([]);
 
   useEffect(() => {
-    getSeriesMeta(imdbId).then(meta => setSeasons(extractSeasons(meta)));
+    fetchShow(tmdbId).then(show => setSeasons(extractSeasons(show)));
   }, []);
 
   return (
@@ -24,6 +24,7 @@ export default function SeasonsScreen({ route, navigation }: Props) {
           onPress={() =>
             navigation.navigate('Episodes', {
               imdbId,
+              tmdbId,
               season,
               title: `${title} · S${season}`
             })

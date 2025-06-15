@@ -8,8 +8,8 @@ import StreamsScreen from './screens/Streams';
 
 export type RootStackParamList = {
   Home: undefined;
-  Seasons: { imdbId: string; title: string };
-  Episodes: { imdbId: string; season: number; title: string };
+  Seasons: { imdbId: string; tmdbId: number; title: string };
+  Episodes: { imdbId: string; tmdbId: number; season: number; title: string };
   Streams: {
     imdbId: string; season: number; episode: number; title: string;
   };
