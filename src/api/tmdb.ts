@@ -1,7 +1,7 @@
-import Constants from 'expo-constants';
+import { TMDB_KEY } from '@env';
 
 const API = 'https://api.themoviedb.org/3';
-const KEY = Constants.expoConfig?.extra?.tmdbKey || process.env.TMDB_KEY;
+const KEY = TMDB_KEY;
 
 /** Busca series en TMDB y devuelve título, IDs y año */
 export async function searchSeriesTMDB(query: string) {
