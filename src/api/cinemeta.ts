@@ -30,3 +30,14 @@ export async function getSeriesMeta(imdbId: string) {
 export function extractSeasons(meta: Awaited<ReturnType<typeof getSeriesMeta>>) {
   return Array.from(new Set(meta.videos.map(v => v.season))).sort((a, b) => a - b);
 }
+
+/** Returns episodes of a season sorted by episode number */
+export function extractEpisodes(
+  meta: Awaited<ReturnType<typeof getSeriesMeta>>,
+  season: number
+) {
+  return meta.videos
+    .filter(v => v.season === season)
+    .sort((a, b) => a.episode - b.episode)
+    .map(v => ({ episode: v.episode, title: v.title }));
+}

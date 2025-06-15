@@ -38,10 +38,9 @@ export default function HomeScreen({ navigation }: Props) {
                     <TouchableOpacity
                         style={{ flexDirection: 'row', padding: 10 }}
                         onPress={() =>
-                            navigation.navigate('Episodes', {
+                            navigation.navigate('Seasons', {
                                 imdbId: item.id,
                                 title: item.name,
-                                seasons: item.seasons || 1
                             })
                         }
                     >
