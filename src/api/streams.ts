@@ -7,6 +7,12 @@ export interface Stream {
   infoHash?: string;
   fileIdx?: number;
   language?: LanguageTag;
+  /**
+   * Additional properties returned by the add-on. These could include
+   * quality, seeders, size or any other custom field. We keep them so the
+   * UI can display extra information when present.
+   */
+  [key: string]: any;
 }
 
 export interface StreamsResult {
