@@ -7,6 +7,18 @@ import * as Clipboard from 'expo-clipboard';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Streams'>;
 
+// Create a short textual description for a torrent stream
+function describeStream(s: Stream) {
+  const parts: string[] = [];
+  if (s.name) parts.push(s.name);
+  if (s.language) parts.push(`[${s.language.toUpperCase()}]`);
+  const extra = Object.entries(s)
+    .filter(([k]) => !['name', 'language', 'url', 'infoHash', 'fileIdx'].includes(k))
+    .map(([k, v]) => `${k}: ${v}`);
+  if (extra.length) parts.push(extra.join(' · '));
+  return parts.join(' · ');
+}
+
 function toMagnet(s: any) {
   if (s.url) return s.url;                          // magnet o http torrent
   if (s.infoHash) {
@@ -56,10 +68,7 @@ export default function StreamsScreen({ route }: Props) {
             style={{ padding: 16, borderBottomWidth: 1, borderColor: '#333' }}
             onPress={() => copy(item)}
         >
-            <Text style={{ color: '#fff' }}>
-            {item.name ?? item.url ?? item.infoHash}
-            {item.language && ` [${item.language.toUpperCase()}]`}
-            </Text>
+            <Text style={{ color: '#fff' }}>{describeStream(item)}</Text>
         </TouchableOpacity>
         )}
       ListHeaderComponent={
