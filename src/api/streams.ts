@@ -9,12 +9,18 @@ export interface Stream {
   language?: LanguageTag;
 }
 
+export interface StreamsResult {
+  streams: Stream[];
+  errors: string[];
+}
+
 export async function getEpisodeStreams(
   imdbId: string,
   season: number,
   episode: number,
-) {
+): Promise<StreamsResult> {
   const collected: Stream[] = [];
+  const errors: string[] = [];
 
   const tasks = Object.values(addons).map(async ({ base, extra }) => {
     const extraPath = extra
@@ -33,7 +39,9 @@ export async function getEpisodeStreams(
         );
       }
     } catch (err) {
-      console.warn('Addon failed', base, err?.toString?.());
+      const msg = `Addon failed ${base} ${err?.toString?.()}`;
+      console.warn(msg);
+      errors.push(msg);
     }
   });
 
@@ -47,5 +55,5 @@ export async function getEpisodeStreams(
     const key = s.url ?? s.infoHash ?? Math.random().toString();
     if (!uniq.has(key)) uniq.set(key, s);
   }
-  return Array.from(uniq.values()) as Stream[];
+  return { streams: Array.from(uniq.values()) as Stream[], errors };
 }
