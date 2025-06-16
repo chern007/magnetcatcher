@@ -22,7 +22,7 @@ ORION_EXTRA=
 MEDIAFUSION_EXTRA=
 ```
 
-Some add-ons require tokens or API keys. Provide them in the `*_EXTRA` variables if necessary.
+Some add-ons require tokens or API keys. Provide them in the `*_EXTRA` variables if necessary. If a variable is left blank (or omitted) the corresponding add-on will be skipped. This is useful for sources like `orion` or `mediafusion` which may not respond correctly in some environments.
 
 ## Network Restrictions
 
