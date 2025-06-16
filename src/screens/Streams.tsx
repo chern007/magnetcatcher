@@ -19,14 +19,25 @@ function toMagnet(s: any) {
 export default function StreamsScreen({ route }: Props) {
   const { imdbId, season, episode, title } = route.params;
   const [streams, setStreams] = useState<Stream[]>([]);
+  const [message, setMessage] = useState<string>('No streams yet…');
 
   useEffect(() => {
-    getEpisodeStreams(imdbId, season, episode).then(all => {
-      const filtered = all.filter(s =>
-        s.language === 'es' || s.language === 'en' || s.language === 'multi'
-      );
-      setStreams(filtered);
-    });
+    getEpisodeStreams(imdbId, season, episode)
+      .then(all => {
+        const filtered = all.filter(s =>
+          s.language === 'es' || s.language === 'en' || s.language === 'multi'
+        );
+        setStreams(filtered);
+        if (!filtered.length) {
+          setMessage(
+            'No se encontraron streams. Comprueba la conexión o si los add-ons están bloqueados.'
+          );
+        }
+      })
+      .catch(err => {
+        console.warn('getEpisodeStreams failed', err);
+        setMessage('Error al obtener streams: ' + err?.toString?.());
+      });
   }, []);
 
   async function copy(stream: any) {
@@ -54,7 +65,7 @@ export default function StreamsScreen({ route }: Props) {
         )}
       ListHeaderComponent={<Text style={{ color: '#aaa', padding: 16 }}>{title}</Text>}
       ListEmptyComponent={
-        <Text style={{ color: '#888', padding: 16 }}>No streams yet…</Text>
+        <Text style={{ color: '#888', padding: 16 }}>{message}</Text>
       }
     />
   );
