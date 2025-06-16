@@ -34,3 +34,5 @@ Addon failed https://peerflix.mov SyntaxError: JSON Parse error: Unexpected char
 ```
 
 it is likely that the add-on domains are blocked or unreachable from your network. The testing environment for this repository blocks those URLs, so no stream options will be listed. Ensure your connection allows requests to the add-on hosts and that the extra tokens are correctly set.
+
+When add-on requests fail, the Streams screen will now display the error messages so you can easily diagnose connectivity issues.

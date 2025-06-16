@@ -19,16 +19,15 @@ function toMagnet(s: any) {
 export default function StreamsScreen({ route }: Props) {
   const { imdbId, season, episode, title } = route.params;
   const [streams, setStreams] = useState<Stream[]>([]);
+  const [errors, setErrors] = useState<string[]>([]);
   const [message, setMessage] = useState<string>('No streams yet…');
 
   useEffect(() => {
     getEpisodeStreams(imdbId, season, episode)
-      .then(all => {
-        const filtered = all.filter(s =>
-          s.language === 'es' || s.language === 'en' || s.language === 'multi'
-        );
-        setStreams(filtered);
-        if (!filtered.length) {
+      .then(({ streams: list, errors }) => {
+        setStreams(list);
+        setErrors(errors);
+        if (!list.length) {
           setMessage(
             'No se encontraron streams. Comprueba la conexión o si los add-ons están bloqueados.'
           );
@@ -63,7 +62,14 @@ export default function StreamsScreen({ route }: Props) {
             </Text>
         </TouchableOpacity>
         )}
-      ListHeaderComponent={<Text style={{ color: '#aaa', padding: 16 }}>{title}</Text>}
+      ListHeaderComponent={
+        <>
+          <Text style={{ color: '#aaa', padding: 16 }}>{title}</Text>
+          {errors.map((e, i) => (
+            <Text key={i} style={{ color: '#f66', paddingHorizontal: 16 }}>{e}</Text>
+          ))}
+        </>
+      }
       ListEmptyComponent={
         <Text style={{ color: '#888', padding: 16 }}>{message}</Text>
       }
