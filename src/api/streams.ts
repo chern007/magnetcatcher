@@ -17,7 +17,8 @@ export async function getEpisodeStreams(
   const collected: Stream[] = [];
 
   const tasks = Object.values(addons).map(async ({ base, extra }) => {
-    const url = `${base}/stream/series/${imdbId}.json?season=${season}&episode=${episode}${extra}`;
+    const extraPath = extra ? `/${extra.replace(/^\//, '')}` : '';
+    const url = `${base}${extraPath}/stream/series/${imdbId}:${season}:${episode}.json`;
     try {
       const { streams } = await fetch(url).then(r => r.json());
       if (streams?.length) {
